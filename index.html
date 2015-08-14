@@ -1,0 +1,92 @@
+<html>
+  <head>
+    <link href='https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/css/bootstrap.css' rel="stylesheet" type="text/css"/>
+    <link href='dc.css' rel="stylesheet" type="text/css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link href='js/leaflet.awesome-markers.css' rel="stylesheet" type="text/css"/>
+    <link href='style.css' rel="stylesheet" type="text/css"/>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/queue-async/1.0.7/queue.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/crossfilter/1.3.11/crossfilter.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js" charset="utf-8"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.3.7/proj4.js"></script>
+    <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
+    <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>    
+    <script type="text/javascript" src="js/dc.js" charset="utf-8"></script>
+    <script type="text/javascript" src="js/tags.js" charset="utf-8"></script>
+    <script type="text/javascript" src="js/leaflet.awesome-markers.js" charset="utf-8"></script>
+  </head>
+  <body>
+    <div class="container">
+      <div class="row">
+        <div class='col-sm-12'>
+          <legend>2014 Motor Vehicle Crashes in New Zealand. </legend>
+        </div>
+        <div class='col-sm-12'>
+	        <p> NZTA have made data extracts from the <a href = https://www.nzta.govt.nz/resources/crash-analysis-system-data/index.html>Crash Analysis System</a> publicly avaliable.   
+          </p>
+        </div>
+        
+        <div id='date' class='dc-chart col-sm-8'>
+          <legend>Crash Date
+            <a href='javascript:date_chart.filterAll(); dc.redrawAll()' class='pull-right reset' style='display:none;'>reset</a>
+          </legend>
+        </div>
+        
+        <div id='time' class='dc-chart col-sm-4'>
+          <legend>Time of day<a href='javascript:time_chart.filterAll(); dc.redrawAll()' class='pull-right reset' style='display:none;'>reset</a></legend>
+        </div>
+        
+        <div id='day' class='dc-chart col-sm-3'>
+          <legend>Day of week<a href='javascript:day_chart.filterAll(); dc.redrawAll()' class='pull-right reset' style='display:none;'>reset</a></legend>
+        </div>
+        <div id='light' class='dc-chart col-sm-3'>
+          <legend>Light<a href='javascript:light_chart.filterAll(); dc.redrawAll()' class='pull-right reset' style='display:none;'>reset</a></legend>
+        </div>
+        <div id='weather' class='dc-chart col-sm-3'>
+          <legend>Weather<a href='javascript:weather_chart.filterAll(); dc.redrawAll()' class='pull-right reset' style='display:none;'>reset</a></legend>
+        </div>
+            
+        <div id='roadwet' class='dc-chart col-sm-3'>
+          <legend>Road Wet?<a href='javascript:roadwet_chart.filterAll(); dc.redrawAll()' class='pull-right reset' style='display:none;'>reset</a></legend>
+        </div>
+        
+        <div id='TLA' class='dc-chart col-sm-3'>
+          <legend>TLA<a href='javascript:TLA_chart.filterAll(); dc.redrawAll()' class='pull-right reset' style='display:none;'>reset</a></legend>
+        </div>
+        
+        <div id='objectsstruck' class='dc-chart col-sm-3'>
+          <legend>Objects struck<a href='javascript:objectsstruck_chart.filterAll(); dc.redrawAll()' class='pull-right reset' style='display:none;'>reset</a></legend>
+        </div>
+        
+        
+
+        <div id='crash_causes' class='dc-chart col-sm-3'>
+          <legend>Crash Causes<a href='javascript:crash_causes_chart.filterAll(); dc.redrawAll()' class='pull-right reset' style='display:none;'>reset</a></legend>
+        </div>
+	      
+        <div id='all_vehicles' class='dc-chart col-sm-3'>
+          <legend>Vehicle Type<a href='javascript:all_vehicles_chart.filterAll(); dc.redrawAll()' class='pull-right reset' style='display:none;'>reset</a></legend>
+        </div>
+        
+        <div id='map' class='col-sm-8'  style='height: 500px; display: block;'></div>
+        <div class='col-sm-4'>
+          <div class='row'>
+            <div id='speed_limit' class='dc-chart col-sm-12'>
+              <legend>Speed limit<a href='javascript:speed_limit_chart.filterAll(); dc.redrawAll()' class='pull-right reset' style='display:none;'>reset</a></legend>
+            </div>
+
+            <div id='Severity' class='dc-chart col-sm-12'>
+              <legend>Most severe injury<a href='javascript:severity_chart.filterAll(); dc.redrawAll()' class='pull-right reset' style='display:none;'>reset</a></legend>
+            </div>        
+          </div>
+        </div>
+                
+       
+      </div>
+    </div>
+    <script type="text/javascript" src="js/app.js" charset="utf-8"></script>
+  </body>
+</html>
+
+

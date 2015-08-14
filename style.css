@@ -1,0 +1,24 @@
+.dc-chart g.row text {
+  fill:black;
+}
+
+.dc-chart g.row text.row.dim {
+  fill:grey;
+}
+
+.dc-chart .pie-slice {
+  fill:black;
+}
+
+.dc-chart .pie-slice path {
+    stroke: white;
+}
+
+.dc-chart legend {
+  font-size: 1em;
+  margin-bottom: 5px;
+}
+
+.subtitle {
+  font-size: 0.7em;
+}

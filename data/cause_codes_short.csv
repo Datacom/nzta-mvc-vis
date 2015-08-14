@@ -1,0 +1,56 @@
+key,value
+100,Alcohol or drugs
+110, Too fast for conditions
+120, Failed to keep left
+130, Lost control
+140, Failed to signal in time
+150, Overtaking
+160, Vehicle signalling right turn
+170, Wrong lane or turned from wrong position
+180, In line of traffic
+190, Sudden action
+200, Forbidden movements
+210, Cyclist riding on ped-xing / ped signals
+300, Failed to give way
+310, Failed to give way at one lane bridge / road
+320,Did not stop
+330,Inattentive: failed to notice
+340,Lane use arrows / markings?
+350,Attention diverted
+370,Did not see or look for another party until too late
+380,"Misjudged speed, distance, size or position of something."
+400, Inexperience
+410," Fatigue (drowsy, tired, fell asleep)"
+420,Incorrect use of vehicle controls
+430, Showing off
+440, Parked or stopped
+500,Illness and disability
+510,Intentional or criminal
+520,"Driver or passenger, boarding, leaving , in vehicle"
+530,Miscellaneous person
+600, Lights and reflectors at fault or dirty
+610, Brakes
+620,Steering
+630,Tyres
+640, Windscreen or mirror
+650,Mechanical
+660, Body or chassis
+670,Inconspicuous colour
+680,Load
+690,Miscellaneous vehicle fault
+700,Walking along road
+710, Crossing road
+720,Miscellaneous pedestrin
+730,Pedestrian behind reversing / manoeuvring vehicle
+800,Slippery
+810, Surface
+820,Obstructed
+830,Visibility limited
+840, Signs and signals
+850,Markings
+860,Street lighting
+870,Raised islands and roundabouts
+900, Weather
+910, Animals
+920,Entering or leaving land use
+930,Other non-commercial

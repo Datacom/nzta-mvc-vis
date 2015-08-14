@@ -1,0 +1,92 @@
+chart	key	label
+ROADCURVE	R	Straight road
+ROADCURVE	E	Easy curve
+ROADCURVE	M	Moderate curve
+ROADCURVE	S	Severe curve
+ROADWET	W	Wet
+ROADWET	D	Dry
+ROADWET	I	Ice or snow
+LIGHT	B	Bright sun
+LIGHT	O	Overcast
+LIGHT	TO	Twilight, street lights on   
+LIGHT	DO	Dark, street lights on
+LIGHT	TF	Twilight, street lights off
+LIGHT	DF	Dark, street lights off
+LIGHT	TN	Twilight, no street lights present
+LIGHT	DN	Dark, no street lights present
+LIGHT	I	Incorrectly Coded
+JUNCTYPE	D	driveway
+JUNCTYPE	R	roundabout
+JUNCTYPE	X	crossroads
+JUNCTYPE	T	T junction
+JUNCTYPE	Y	Y junction
+JUNCTYPE	M	multi-leg (more than 4 legs)
+TRAFCTRL	T	traffic signals
+TRAFCTRL	S	stop sign
+TRAFCTRL	G	give way sign
+TRAFCTRL	P	school patrol or warden
+TRAFCTRL	N	nil
+ROADMARK	X	pedestrian crossing
+ROADMARK	R	raised island
+ROADMARK	P	painted island
+ROADMARK	L	no passing line
+ROADMARK	C	centre line
+ROADMARK	N	nil
+WTHRa		Not Recorded
+WTHRa	F	Fine
+WTHRa	M	Mist/fog
+WTHRa	L	Light rain
+WTHRa	H	Heavy rain
+WTHRa	S	Snow
+WTHRa	FF	Fine with Frost
+WTHRa	MF	Mist/fog with Frost
+WTHRa	LF	Light rain with Frost
+WTHRa	HF	Heavy rain with Frost
+WTHRa	SF	Snow with Frost
+WTHRa	FS	Fine with strong wind
+WTHRa	MS	Mist/fog with strong wind
+WTHRa	LS	Light rain with strong wind
+WTHRa	HS	Heavy rain with strong wind
+WTHRa	SS	Snow with strong wind
+WTHRa	Others	Others
+ObjectStruck	A	driven or accompanied animals, i.e. under control
+ObjectStruck	B	bridge abutment, handrail or approach, includes tunnels
+ObjectStruck	C	upright cliff or bank, retaining walls
+ObjectStruck	D	debris, boulder or object dropped from vehicle
+ObjectStruck	E	over edge of bank
+ObjectStruck	F	fence, letterbox, hoarding etc.
+ObjectStruck	G	guard or guide rail (including median barriers)
+ObjectStruck	H	house or building
+ObjectStruck	I	traffic island or median strip
+ObjectStruck	J	public furniture, eg phone boxes, bus shelters, signal controllers, etc
+ObjectStruck	K	kerb, when directly contributing to incident
+ObjectStruck	L	landslide, washout or floodwater
+ObjectStruck	M	parked motor vehicle
+ObjectStruck	N	train
+ObjectStruck	P	utility pole, includes lighting columns
+ObjectStruck	Q	broken down vehicle, workmen’s vehicle, taxis picking up, etc
+ObjectStruck	R	roadwork signs or drums, holes and excavations, etc
+ObjectStruck	S	traffic signs or signal bollards
+ObjectStruck	T	trees, shrubbery of a substantial nature
+ObjectStruck	V	ditch
+ObjectStruck	W	wild animal, strays, or out of control animals
+ObjectStruck	X	other
+ObjectStruck	Y	objects thrown at or dropped onto vehicles
+ObjectStruck	Z	into water, river or sea.
+all_vehicles	C	car 
+all_vehicles	T	truck
+all_vehicles	V	van, ute 
+all_vehicles	M	motorcycle
+all_vehicles	X	taxi or taxi van 
+all_vehicles	P	moped
+all_vehicles	B	bus 
+all_vehicles	S	bicycle
+all_vehicles	L	school bus 
+all_vehicles	O	other or unknown
+all_vehicles	4	SUV or 4X4 vehicle
+all_vehicles	E	pedestrian
+all_vehicles	K	skateboard, in-line skater etc
+all_vehicles	Q	equestrian
+all_vehicles	H	wheeled pedestrian (wheelchairs etc)
+all_vehicles	O	other or unknown.
+all_vehicles	0	Incorrectly Coded
