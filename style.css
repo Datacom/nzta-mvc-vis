@@ -14,6 +14,12 @@
     stroke: white;
 }
 
+.dc-chart .selected path {
+    stroke-width: 0;
+    stroke: #ccc;
+    fill-opacity: 1;
+}
+
 .dc-chart legend {
   font-size: 1em;
   margin-bottom: 5px;
@@ -21,4 +27,13 @@
 
 .subtitle {
   font-size: 0.7em;
+}
+#map svg{
+  background-color:#efefef;
+}
+
+#light svg{background-image: url('js/images/icons_top_5day.GIF');
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: 50% 50%;
 }

@@ -6,32 +6,11 @@ var dateFormat = d3.time.format('%d/%m/%Y')
 var withHours = d3.format("04d");
 var timeFormat = d3.time.format('%H%M')
 var display_dateFormat = d3.time.format('%Y-%m-%d')
-var NZTMprojection = "+proj=tmerc +lat_0=0 +lon_0=173 +k=0.9996 +y_0=10000000 +x_0=1600000 +ellps=GRS80 +datum=NZGD2000 +units=m +no_defs";
-//var NZTMprojection = "+proj=tmerc +lat_0=0.0 +lon_0=173.0 +k=0.9996 +x_0=1600000.0 +y_0=10000000.0 +datum=WGS84 +units=m";
+//var NZTMprojection = "+proj=tmerc +lat_0=0 +lon_0=173 +k=0.9996 +y_0=10000000 +x_0=1600000 +ellps=GRS80 +datum=NZGD2000 +units=m +no_defs";
 
-var fatalIcon = L.AwesomeMarkers.icon({
-    prefix: 'fa', //font awesome rather than bootstrap
-    markerColor: 'darkred', // see colors above
-    icon: 'exclamation-triangle' //http://fortawesome.github.io/Font-Awesome/icons/
-});
-
-var seriousIcon = L.AwesomeMarkers.icon({
-    prefix: 'fa', //font awesome rather than bootstrap
-    markerColor: 'red', // see colors above
-    icon: 'exclamation-triangle' //http://fortawesome.github.io/Font-Awesome/icons/
-});
-
-var minorIcon = L.AwesomeMarkers.icon({
-    prefix: 'fa', //font awesome rather than bootstrap
-    markerColor: 'orange', // see colors above
-    icon: 'exclamation-triangle' //http://fortawesome.github.io/Font-Awesome/icons/
-});
-
-var noneIcon = L.AwesomeMarkers.icon({
-    prefix: 'fa', //font awesome rather than bootstrap
-    markerColor: 'cadetblue', // see colors above
-    icon: 'exclamation-triangle' //http://fortawesome.github.io/Font-Awesome/icons/
-});
+function hideReset() {
+  d3.select('#resetPosition').classed('hidden',function(){return true});
+}
 
 function dim_zero_rows(chart) {
   chart.selectAll('text.row').classed('hidden',function(d){return (d.value < 0.1)});
@@ -44,11 +23,11 @@ filter_dim = {}
 
 // this is all map stuff. our dataset has northing and easting, so we might want to bring this back in eventually, but I think we might want to avoid identifying individual crashes in the long run.
 
-
-var map;
-var markers = [];
-
-maxMarkers = 80;
+//
+//var map;
+//var markers = [];
+//
+//maxMarkers = 80;
 
 //-----------location by severity accessors-------------------------------------------------------
   
@@ -84,130 +63,12 @@ function loc_init() {
     return p;
   }
 
-//------------------------------------------------------MARKERS-MARKERS-MARKERS-------------------------------------------------------
-var updateMarkers = _.debounce(filterUpdateMarkers, 200)
 
-var dontRepaintAfterMove = false;
-
-function filterUpdateMarkers() {
-//  crash_locs_all = crash_locs_group.all();
-//  count = 0;
-//  filtered_locations = [];
-//  new_markers = [];
-//  bad_location = "-90 173";
-//  
-//  for (i in crash_locs_all){
-//      if (crash_locs_all[i].value.count > 0 && crash_locs_all[i].key != bad_location){
-//        filtered_locations.push({location:crash_locs_all[i].key.split(' '), severity:crash_locs_all[i].value.severity}); //array of markers
-//      }
-//  }
-//
-//  newmarkers = get_most_severe_markers();  
-//  markers_bounds = createMarkers(new_markers)
-//  dontRepaintAfterMove = true;
-//  map.fitBounds(markers_bounds, {maxZoom:8, padding:[30,30]})
-}
-//------------------------------------------------------------------------------------------------------------------------------------
-
-severity_icons = {
-  Fatal:fatalIcon,
-  Serious:seriousIcon,
-  Minor:minorIcon,
-  "No injury":noneIcon
-}
-    
-markerLayer = L.layerGroup([])
-    
-function createMarkers(new_markers) {
-  _.each(markers, function (marker) {map.removeLayer(marker)}) // remove all old markers
-  markers = _.map(new_markers, function (marker) {return L.marker(marker.location, {icon:severity_icons[marker.severity]})})  //generate new markers
-  _.each(markers, function(marker) {marker.addTo(map)} )  // add new markers to map
-  return L.featureGroup(markers).getBounds(); // returns the bounds of all of the markers
-}
-
-
-function get_n_locations(locations, n){
-  // actually gets about n locations. Somewhere between n and 2n. Really doesn't matter as we're aiming for an amount best described as "not too many".
-  new_locations = [];
-  nLoc = locations.length; 
-  if (nLoc > n) {    
-    step = Math.floor(nLoc/n);
-      if (step > 1){
-        for (i = 0; i < nLoc; i=i+step){new_locations.push(locations[i]);}
-      } else {new_locations = locations;}
-  }else {new_locations = locations;}
-return new_locations;
-}
-
-function get_most_severe_markers(){
-  fatal_locations = _.filter(filtered_locations, function(d){return d.severity == 'Fatal'});
-    n_fatal_locations = fatal_locations.length;
-      if (n_fatal_locations >= maxMarkers) // we have more fatals than we want to plot.
-            {new_markers = get_n_locations(fatal_locations, maxMarkers)}
-      else {new_markers = fatal_locations; // take all the fatals
-            serious_locations = _.filter(filtered_locations, function(d){return d.severity == 'Serious'}); // add in some serious locations
-            n_serious_locations = serious_locations.length;
-              if (n_serious_locations > maxMarkers-n_fatal_locations) {
-                 new_markers = new_markers.concat(get_n_locations(serious_locations,maxMarkers-n_fatal_locations));
-              }
-              else {new_markers = new_markers.concat(serious_locations);
-                  minor_locations = _.filter(filtered_locations, function(d){return d.severity == 'Minor'}); // add in some minor locations
-                  n_minor_locations = minor_locations.length; 
-                  n_new_markers = new_markers.length;                
-                    if (n_minor_locations > maxMarkers-n_new_markers) {
-                      new_markers = new_markers.concat(get_n_locations(minor_locations,maxMarkers-n_new_markers));
-                    }
-                    else {new_markers = new_markers.concat(minor_locations);
-                          noInj_locations = _.filter(filtered_locations, function(d){return d.severity == 'No injury'}); // add in some no injury locations
-                          n_noInj_locations = noInj_locations.length;
-                          n_new_markers = new_markers.length;                
-                            if (n_noInj_locations > maxMarkers-n_new_markers) {
-                                new_markers = new_markers.concat(get_n_locations(noInj_locations,maxMarkers-n_new_markers));
-                            }
-                            else {new_markers = new_markers.concat(noInj_locations);} // there are no more crashes to be had. Um. Yay!
-                    }
-                }
-           }
-  return new_markers;
-}
-
-function zoomUpdateMarkers(event) {
-  if (dontRepaintAfterMove) {
-    dontRepaintAfterMove = false;
-    return;
-  }
-  crash_locs_all = crash_locs_group.all();
-  count = 0;
-  filtered_locations = [];
-  new_markers = [];
-  bad_location = "-90 173";
-  bounds = map.getBounds();
- 
-  // get markers in the new bounding box
-  for (i in crash_locs_all){
-      if (crash_locs_all[i].value.count > 0){
-        this_loc = {location:crash_locs_all[i].key.split(' '), severity:crash_locs_all[i].value.severity};
-          if(bounds.contains([+this_loc.location[0],+this_loc.location[1]])) {
-            filtered_locations.push(this_loc); //array of markers
-          }
-      }
-  }
-
-  new_markers = get_most_severe_markers();
-  console.log('new_markers ',new_markers.length)
-
-  createMarkers(new_markers)
-
-}
-
-
-//-----------------------------------------------------------------------------------------------------------------------------------------------
 
 function cleanup(d) {
   
   d.crash_date = dateFormat.parse(d.CRASHDATE);
   d.crash_week = d3.time.week.floor(d.crash_date);
-//  d.crash_day = d.crash_date.getDay();
   d.crash_day = (d.crash_date.getDay() + 6)%7;
   d.crash_hour = +withHours(+d.CRASHTIME).slice(0,2);
   d.objects_struck = d.OBJECTSSTRUCK.split('')
@@ -256,13 +117,6 @@ function cleanup(d) {
       date_domain.max = d.crash_date;
 
   }
-  //
-  //if (d.TLANAME.trim() == "Chatham Islands County"){d.lonlat = proj4(NZTMprojection).inverse([d.EASTING+363392, d.NORTHING])}
-  //else {d.lonlat = proj4(NZTMprojection).inverse([d.EASTING, d.NORTHING])}
-  
-  d.lonlat = proj4(NZTMprojection).inverse([d.EASTING, d.NORTHING])
-  if (d.TLANAME.trim() == "Chatham Islands County"){d.lonlat[0] = (d.lonlat[0]+4.5);
-                                                   d.lonlat[1] = (d.lonlat[1]-0.545)}
   
   d.SPDLIM = +d.SPDLIM;
   
@@ -281,17 +135,17 @@ var dict = {
 }
 
 queue()
-    .defer(d3.csv, "data/crash-data-2014-reduced.csv", cleanup)
-    .defer(d3.tsv, "data/dicts.tsv")
-    .defer(d3.csv, "data/cause_codes_short.csv")
-    .defer(d3.json, "data/nztla_2012.json") 
+    .defer(d3.csv,  "data/crash-data-2014-reduced.csv", cleanup)
+    .defer(d3.tsv,  "data/dicts.tsv")
+    .defer(d3.csv,  "data/cause_codes_short.csv")
+    .defer(d3.json, "data/clipped_working_nois2.geojson") 
     .await(showCharts);
 
 dictionaries = {
 }
 
 function showCharts(err, data, dicts, cause_codes_dict, nz_tla) {
- // console.log(err)
+
 
   dictionaries.cause_codes = {'Others':'Others'};
   for (i in cause_codes_dict) {
@@ -307,22 +161,22 @@ function showCharts(err, data, dicts, cause_codes_dict, nz_tla) {
   
   
   _data = data;
-  
   _nz_tla = nz_tla;
-  
+    
+  format_s = d3.format('s')
+  format_d = d3.format('d') 
+  whole_crashes_format = function(d){if(d < 1){return ""} else if (d < 10 ) {return format_d(d)} else {return format_s(d)}}
 
   ndx = crossfilter(_data);
-  
+
   date_domain.min = d3.time.month.offset(date_domain.min, -1)
   date_domain.max = d3.time.month.offset(date_domain.max, +1)
-  
-
   date = ndx.dimension(function(d) { return d.crash_week });
   date_group = date.group().reduceCount();
   
 
   date_chart = dc.barChart('#date')
-    .height(200)
+    .height(150)
     .dimension(date)
     .group(date_group)
     .elasticY(true)
@@ -332,16 +186,18 @@ function showCharts(err, data, dicts, cause_codes_dict, nz_tla) {
     .renderHorizontalGridLines(true)
     .renderVerticalGridLines(true)
     .transitionDuration(200)
-    //.on('filtered.markers',updateMarkers)
 
-  date_chart.yAxis().ticks(4).tickFormat(d3.format('s'));
+  
+  date_chart.yAxis().ticks(4).tickFormat(whole_crashes_format);
+  date_chart.xAxis().tickFormat(d3.time.format('%b'));
+  
 
   time = ndx.dimension(function(d) { return d.crash_hour });
   time_group = time.group().reduceCount();
   
 
   time_chart = dc.barChart('#time')
-    .height(200)
+    .height(150)
     .dimension(time)
     .group(time_group)
     .elasticY(true)
@@ -350,16 +206,15 @@ function showCharts(err, data, dicts, cause_codes_dict, nz_tla) {
     .renderHorizontalGridLines(true)
     .renderVerticalGridLines(true)
     .transitionDuration(200)
-    //.on('filtered.markers',updateMarkers)
 
-  time_chart.yAxis().ticks(4).tickFormat(d3.format('s'));
   
+  time_chart.yAxis().ticks(4).tickFormat(whole_crashes_format);
   
   day = ndx.dimension(function(d) { return d.crash_day });
   day_group = day.group().reduceCount();
 
   day_chart = dc.barChart('#day')
-    .height(200)
+    .height(150)
     .dimension(day)
     .group(day_group)
     .elasticY(true)
@@ -370,24 +225,11 @@ function showCharts(err, data, dicts, cause_codes_dict, nz_tla) {
     .transitionDuration(200)
     //.on('filtered.markers',updateMarkers)
 
-  days = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
-  day_chart.yAxis().ticks(4).tickFormat(d3.format('s'));
+  days = ['M','T','W','T','F','S','S'];
+  day_chart.yAxis().ticks(4).tickFormat(whole_crashes_format);
   day_chart.xAxis().tickFormat(function(x) { return days[x]});
   
-  TLA = ndx.dimension(function(d) { return d.TLANAME});
-  TLA_group = TLA.group().reduceCount();
-  TLA_chart = dc.rowChart('#TLA')
-    .dimension(TLA)
-    .group(TLA_group)
-    .transitionDuration(200)
-    .height(400)
-    .elasticX(true)
-    .ordering(function(d) {return -d.value})
-    .cap(20)
-    //.on('filtered.markers',updateMarkers)
   
-  TLA_chart.xAxis().ticks(4).tickFormat(d3.format('s'));
-  TLA_chart.on('pretransition.dim', dim_zero_rows)
   
   objects_struck_tags = createTagDimAndGroup(ndx, 'objects_struck')
   objectsstruck_chart = dc.rowChart('#objectsstruck')
@@ -402,9 +244,9 @@ function showCharts(err, data, dicts, cause_codes_dict, nz_tla) {
     .title(function(d) { return dictionaries.ObjectStruck[d.key] + ": " + d.value})
     .ordering(function(d) {return -d.value})
     .cap(25)
-    .on('filtered.markers',updateMarkers)
+
   
-  objectsstruck_chart.xAxis().ticks(4).tickFormat(d3.format('s'));
+  objectsstruck_chart.xAxis().ticks(4).tickFormat(whole_crashes_format);
   objectsstruck_chart.on('pretransition.dim', dim_zero_rows)
 
 
@@ -421,9 +263,9 @@ function showCharts(err, data, dicts, cause_codes_dict, nz_tla) {
     .title(function(d) { return dictionaries.WTHRa[d.key] + ": " + d.value})
     .ordering(function(d) {return -d.value})
     .cap(10)
-    //.on('filtered.markers',updateMarkers)
+
   
-  weather_chart.xAxis().ticks(4).tickFormat(d3.format('s'));
+  weather_chart.xAxis().ticks(4).tickFormat(whole_crashes_format);
   weather_chart.on('pretransition.dim', dim_zero_rows)
 
   light = ndx.dimension(function(d) { return d.LIGHT});
@@ -438,7 +280,7 @@ function showCharts(err, data, dicts, cause_codes_dict, nz_tla) {
     .title(function(d) { return dictionaries.LIGHT[d.key] + ": " + d.value})
     .transitionDuration(200)
     .height(200)
-    //.on('filtered.markers',updateMarkers)
+
   
   roadwet = ndx.dimension(function(d) { return d.ROADWET});
   roadwet_group = roadwet.group().reduceCount();
@@ -451,7 +293,7 @@ function showCharts(err, data, dicts, cause_codes_dict, nz_tla) {
     .title(function(d) { return dictionaries.ROADWET[d.key] + ": " + d.value})
     .transitionDuration(200)
     .height(200)
-    //.on('filtered.markers',updateMarkers)
+
   
   
   crash_causes_tags = createTagDimAndGroup(ndx, 'crash_causes')
@@ -461,15 +303,15 @@ function showCharts(err, data, dicts, cause_codes_dict, nz_tla) {
     .group(crash_causes_tags.group)
     .filterHandler(crash_causes_tags.filterHandlerFor(crash_causes_chart))
     .transitionDuration(200)
-    .height(400)
+    .height(720)
     .elasticX(true)
     .label(function(d) { return dictionaries.cause_codes[d.key]})
     .title(function(d) { return dictionaries.cause_codes[d.key] + ": " + d.value})
     .ordering(function(d) {return -d.value})
-    .cap(25)
-    //.on('filtered.markers',updateMarkers)
+    .cap(40)
+
   
-  crash_causes_chart.xAxis().ticks(4).tickFormat(d3.format('s'));
+  crash_causes_chart.xAxis().ticks(4).tickFormat(whole_crashes_format);
   crash_causes_chart.on('pretransition.dim', dim_zero_rows)
 
   all_vehicles_tags = createTagDimAndGroup(ndx, 'all_vehicles')
@@ -479,15 +321,15 @@ function showCharts(err, data, dicts, cause_codes_dict, nz_tla) {
     .group(all_vehicles_tags.group)
     .filterHandler(all_vehicles_tags.filterHandlerFor(all_vehicles_chart))
     .transitionDuration(200)
-    .height(400)
+    .height(274)
     .elasticX(true)
     .label(function(d) { return dictionaries.all_vehicles[d.key]})
     .title(function(d) { return dictionaries.all_vehicles[d.key] + ": " + d.value})
     .ordering(function(d) {return -d.value})
     .cap(25)
-    //.on('filtered.markers',updateMarkers)
+
   
-  all_vehicles_chart.xAxis().ticks(4).tickFormat(d3.format('s'));
+  all_vehicles_chart.xAxis().ticks(4).tickFormat(whole_crashes_format);
   all_vehicles_chart.on('pretransition.dim', dim_zero_rows)
   
   speed_limit = ndx.dimension(function(d) { return d.SPDLIM});
@@ -502,10 +344,9 @@ function showCharts(err, data, dicts, cause_codes_dict, nz_tla) {
     .label(function(d) {return d.key + ' km/hr'})
     .title(function(d) { return d.key  +" km/hr: " + d.value})
     .ordering(function(d) {return -d.key})
-    //.cap(10)
-    //.on('filtered.markers',updateMarkers)
   
-  speed_limit_chart.xAxis().ticks(4).tickFormat(d3.format('s'));
+  
+  speed_limit_chart.xAxis().ticks(4).tickFormat(whole_crashes_format);
   speed_limit_chart.on('pretransition.dim', dim_zero_rows)
   
   severity = ndx.dimension(function(d) { return d.severity});
@@ -520,54 +361,70 @@ function showCharts(err, data, dicts, cause_codes_dict, nz_tla) {
     .title(function(d) { return d.key + ": " + d.value})
     .transitionDuration(200)
     .height(200)
-    //.on('filtered.markers',updateMarkers)
+ 
+var colourscale = d3.scale.log().range(["#ffe7cf","#E6550D"])
 
+projection = d3.geo.mercator()
+            .center([170,-40])
+            .scale(2000)
+            .translate([220, 320]); // width, height
 
-  crash_locs = ndx.dimension(function(d) {return [d.lonlat[1],d.lonlat[0]]});
-  //crash_locs_group = crash_locs.group().reduce(loc_add,loc_sub,loc_init);
-  crash_locs_group = crash_locs.group().reduceCount();
-
-//  var tiles = L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiYmxhaXJuaWxzc29uIiwiYSI6IjllOWNhNGU0MjAxNTNhMjQ0MWM1NGE0ZDc5YTU5ZTA1In0.QWLOhfygnMMipPJL7gfTfw', {
-//		maxZoom: 17,
-//                  minZoom: 5,
-//		attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
-//				'<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
-//				'Imagery © <a href="http://mapbox.com">Mapbox</a>',
-//                  id:'mapbox.streets'
-//  })
-/*
-  mymap = dc_leaflet.markerChart("#map")
-      .dimension(crash_locs)
-      .group(crash_locs_group)
-      .width(600)
-      .height(400)
-      .center([-41, 172])
-      .zoom(5)
-      .tiles(function(map) {
-        tiles.addTo(map);
-      })
-      .cluster(true)
-
-  */  
+function zoomed() {
+    projection
+    .translate(d3.event.translate)
+    .scale(d3.event.scale);
+    var hidden = projection.scale() == 2000 && JSON.stringify(projection.translate()) == JSON.stringify([220,320]);
+    console.log('testing!!', projection.scale(), projection.translate(), hidden)
+    d3.select('#resetPosition').classed('hidden',function(){return hidden})
+    mymap.render();
+    }
   
-  var projection = d3.geo.mercator()
-            .center([172,-41])
-            .scale(1200)
-           // .translate([200, 300]); // width, height
+  
+  zoom = d3.behavior.zoom()
+    .translate(projection.translate())
+    .scale(projection.scale())
+    .scaleExtent([2000, 20000])
+    .on("zoom", zoomed);
 
+  d3.select("#map").call(zoom);
+
+  function colourRenderlet(chart) {
+    ext = d3.extent(mymap.data(), mymap.valueAccessor());
+    ext[0]=0.0001;
+    mymap.colorDomain(ext);
+    }
+
+  TLA = ndx.dimension(function(d) { return d.TLANAME});
+  TLA_group = TLA.group().reduceCount();
+  
   mymap = dc.geoChoroplethChart("#map")
       .dimension(TLA)
       .group(TLA_group)
       .projection(projection)
-      .width(600)
-      .height(400)
-      //.center([-41, 172])
-      //.zoom(5)             
-      .overlayGeoJson(_nz_tla.features, 'tla', function(d) {return d.properties.NAME})
+      .colorAccessor(function(d){return d + 1})
+      .colorCalculator(function(d){return (d==0)? '#ffe7cf' : colourscale(d)})
+      .transitionDuration(200)
+      .height(700)
+      .overlayGeoJson(_nz_tla.features, 'tla', function(d) {return dictionaries.TLA_name[d.properties.NAME]})
+      .colors(colourscale) 
+      .on("preRender", colourRenderlet)
+      .on("preRedraw", colourRenderlet)
       
-  
-  
   dc.renderAll();
+  
+//  d3.select("#light svg").append("text")
+//                          .attr("x", 100) 
+//                          .attr("y",100)
+//                          .attr("fill", "red")
+//                          .text("I love SVG!")
+  
+//  d3.select("#light svg").append("image")
+//                          .attr("x", 65) 
+//                          .attr("y", 65)
+//                          .attr("width",70)
+//                          .attr("height",70)
+//                          .attr("xlink:href", "js/images/icons_top_5day.GIF")
+  
   //mymap.tiles(tiles)
   
   
