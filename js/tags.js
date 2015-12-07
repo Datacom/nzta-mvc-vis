@@ -44,14 +44,22 @@ function createTagDimAndGroup(cf, field) {
     return (newObject.length > x)?newObject.slice(0,x):newObject;
   }
   
-  
+ 
   filterHandlerFor = function(chart) {
-    return function(dimension, filter) {
-      dimension.filter(function(d) {return chart.filter() != null ? d.indexOf(chart.filter()) >= 0 : true;}); // perform filtering
-        return filter; // return the actual filter value
+   
+    return function(dimension, filter) { 
+      //console.log(dimension,filter)
+      dimension.filter(function(d) {
+        datumTags = d // too many d's. Let us be explicit.                            
+        // if datumTags contains any of the elements of chart.filters(), return true.
+        is_filter_in_tags =  _.map(chart.filters(), function(chartFilter) {return _.contains(datumTags,chartFilter)})
+        //if there are no filters, or if at least one of the filters is in the tags, return true.
+        return chart.filter() != null ? d3.sum(is_filter_in_tags) > 0 : true
+                                   });
+                                     
+      return filter; // return the actual filter value
     }
   }
-  
   return {dim:tags, group:tagsGroup, filterHandlerFor:filterHandlerFor}
 }
 
